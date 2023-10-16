@@ -7,40 +7,40 @@ module Lexical.Mgol where
         [1, 3, 6, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
          25, 26, 27, -1])
 
-    mgolToken :: State -> (Class, Type)
-    mgolToken (-1) = (Ign, Null)
-    mgolToken 1    = (Num, Integer)
-    mgolToken 3    = (Num, Real)
-    mgolToken 6    = (Num, Cientific)
-    mgolToken 8    = (Lit, Null)
-    mgolToken 9    = (Id, Null)
-    mgolToken 11   = (Com, Null)
-    mgolToken 12   = (Eof, Null)
-    mgolToken 13   = (Opr, Null)
-    mgolToken 14   = (Opr, Null)
-    mgolToken 15   = (Opr, Null)
-    mgolToken 16   = (Opr, Null)
-    mgolToken 17   = (Opr, Null)
-    mgolToken 18   = (Opr, Null)
-    mgolToken 19   = (Rcb, Null)
-    mgolToken 20   = (Opm, Null)
-    mgolToken 21   = (Opm, Null)
-    mgolToken 22   = (Opm, Null)
-    mgolToken 23   = (Opm, Null)
-    mgolToken 24   = (AbP, Null)
-    mgolToken 25   = (FcP, Null)
-    mgolToken 26   = (PtV, Null)
-    mgolToken 27   = (Vir, Null)
+    mgolToken :: State -> Class
+    mgolToken (-1) = Ign
+    mgolToken 1    = Num Null
+    mgolToken 3    = Num Null
+    mgolToken 6    = Num Null
+    mgolToken 8    = Literal
+    mgolToken 9    = Id
+    mgolToken 11   = Com
+    mgolToken 12   = Eof
+    mgolToken 13   = Opr
+    mgolToken 14   = Opr
+    mgolToken 15   = Opr
+    mgolToken 16   = Opr
+    mgolToken 17   = Opr
+    mgolToken 18   = Opr
+    mgolToken 19   = Rcb
+    mgolToken 20   = Opm
+    mgolToken 21   = Opm
+    mgolToken 22   = Opm
+    mgolToken 23   = Opm
+    mgolToken 24   = AbP
+    mgolToken 25   = FcP
+    mgolToken 26   = PtV
+    mgolToken 27   = Vir
 
-    mgolToken (-3) = (Err CharN, Null)
-    mgolToken (-2) = (Err CharI, Null)
-    mgolToken 0    = (Err CharN, Null)
-    mgolToken 2    = (Err RealI, Null)
-    mgolToken 4    = (Err CienI, Null)
-    mgolToken 5    = (Err CienI, Null)
-    mgolToken 7    = (Err LitI, Null)
-    mgolToken 10   = (Err ComI, Null)
-    mgolToken _    = (Err Unk, Null)
+    mgolToken (-3) = Err CharN
+    mgolToken (-2) = Err CharI
+    mgolToken 0    = Err CharN
+    mgolToken 2    = Err RealI
+    mgolToken 4    = Err CienI
+    mgolToken 5    = Err CienI
+    mgolToken 7    = Err LitI
+    mgolToken 10   = Err ComI
+    mgolToken _    = Err Unk
     
 
     nums    = ['0'..'9']

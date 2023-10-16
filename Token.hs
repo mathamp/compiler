@@ -1,15 +1,20 @@
 module Token where
     
     data ErrT = RealI | CienI | LitI | ComI | CharI | CharN | Unk
+        deriving (Eq)
     
-    data Class = Num | Lit | Id | Com | Eof | Opr | Rcb | Opm | AbP | FcP | PtV |
+    data NumT = Null | Integer | Real2 | Cientific
+        deriving (Eq)
+    
+    data Class = Num NumT | Id | Com | Eof | Opr | Rcb | Opm | AbP | FcP | PtV |
          Err ErrT | Vir | Ign | Inicio | VarInicio | VarFim | Escreva | Leia | Se | 
-         Entao | FimSe | Repita | FimRepita | Fim
+         Entao | FimSe | Repita | FimRepita | Fim | Inteiro | Real | Literal
+         deriving (Eq)
         
     type Lexeme = String
-    data Type = Null | Integer | Real | Cientific
+    -- data Type = Null | Integer | Real | Cientific
 
-    type Token = (Lexeme, (Class, Type))
+    type Token = (Lexeme, Class)
 
     instance Show ErrT where
         show RealI = "Número real incompleto"
@@ -22,9 +27,11 @@ module Token where
 
     instance Show Class where
         show c = case c of
-            Num -> "NUM"
-            Lit -> "LIT"
-            Id ->  "ID "
+            Num _ -> "NUM"
+            Inteiro -> "INT"
+            Real -> "REA"
+            Literal -> "LIT"
+            Id  ->  "ID "
             Com -> "COM"
             Eof -> "EOF"
             Opr -> "OPR"
@@ -37,24 +44,17 @@ module Token where
             Vir -> "VIR"
             Ign -> "IGN"
 
-            Inicio -> "inicio"
-            VarInicio -> "varinicio"
-            VarFim -> "varfim"
-            Escreva -> "escreva"
-            Leia -> "leia"
-            Se -> "se"
-            Entao -> "entao"
-            FimSe -> "fimse"
-            Repita -> "repita"
-            FimRepita -> "fimrepita"
-            Fim -> "fim"
-    
-    instance Show Type where
-        show t = case t of
-            Null -> "nulo"
-            Integer -> "inteiro"
-            Real -> "real"
-            Cientific -> "cientifico"
+            Inicio -> "Inicio"
+            VarInicio -> "VarInicio"
+            VarFim -> "VarFim"
+            Escreva -> "Escreva"
+            Leia -> "Leia"
+            Se -> "Se"
+            Entao -> "Entao"
+            FimSe -> "Fimse"
+            Repita -> "Repita"
+            FimRepita -> "FimRepita"
+            Fim -> "Fim"
 
     token2str :: String -> String -> String -> String
     token2str c l t = 
@@ -63,20 +63,28 @@ module Token where
         "Tipo: "   ++ show t
 
     showToken :: Token -> String
-    showToken (l, (c, t))= case (c, l, t) of
-            (Inicio, _, _)      -> token2str "inicio" "inicio" "inicio"
-            (VarInicio, _, _)   -> token2str "varinicio" "varinicio" "varinicio"
-            (VarFim, _, _)      -> token2str "varinicio" "varinicio" "varinicio"
-            (Escreva, _, _)     -> token2str "escreva" "escreva" "escreva"
-            (Leia, _, _)        -> token2str "leia" "leia" "leia"
-            (Se, _, _)          -> token2str "se" "se" "se"
-            (Entao, _, _)       -> token2str "entao" "entao" "entao"
-            (FimSe, _, _)       -> token2str "fimse" "fimse" "fimse"
-            (Repita, _, _)      -> token2str "repita" "repita" "repita"
-            (FimRepita, _, _)   -> token2str "fimrepita" "fimrepita" "fimrepita"
-            (Fim, _, _)         -> token2str "fim" "fim" "fim"
+    showToken (l, c)= case (c, l) of
+            (Inicio, _)      -> token2str "inicio" "inicio" "inicio"
+            (VarInicio, _)   -> token2str "varinicio" "varinicio" "varinicio"
+            (VarFim, _)      -> token2str "varinicio" "varinicio" "varinicio"
+            (Escreva, _)     -> token2str "escreva" "escreva" "escreva"
+            (Leia, _)        -> token2str "leia" "leia" "leia"
+            (Se, _)          -> token2str "se" "se" "se"
+            (Entao, _)       -> token2str "entao" "entao" "entao"
+            (FimSe, _)       -> token2str "fimse" "fimse" "fimse"
+            (Repita, _)      -> token2str "repita" "repita" "repita"
+            (FimRepita, _)   -> token2str "fimrepita" "fimrepita" "fimrepita"
+            (Fim, _)         -> token2str "fim" "fim" "fim"
 
-            (Err e, _, _)    -> "Erro lexico - " ++ show e
+            (Err e, _)    -> "Erro lexico - " ++ show e
 
-            (Lit, l, t) -> token2str (show Lit) l "literal"
-            (c,   l, t) -> token2str (show c) l   (show t)
+            (Literal, l) -> token2str (show Literal) l "literal"
+            (c, l) -> token2str (show c) l "null"
+    
+    isErr :: Token -> Bool
+    isErr (_, Err e) = True
+    isErr _1         = False
+
+    isIgn :: Token -> Bool
+    isIgn (_, Ign) = True
+    isIgn _       = False

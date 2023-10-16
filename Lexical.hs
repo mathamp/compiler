@@ -25,7 +25,7 @@ module Lexical where
                     res = f s c
     
     scanner :: String -> (Token, String)
-    scanner [] = (("", (Eof, Null)), "")
+    scanner [] = (("", Eof), "")
     scanner w  = ((lexeme, token), remaining)
         where
             split       = readAndCollect w
@@ -37,8 +37,8 @@ module Lexical where
     parse s = updateKeywords $ posTokenList $ reverse $ generateTokens [] s
         where
             generateTokens ts s = case token of
-                (_, (Eof, _)) -> ts
-                _             -> generateTokens (token:ts) remaining
+                (_, Eof)    -> token:ts
+                _           -> generateTokens (token:ts) remaining
                 where
                     (token, remaining) = scanner s
             
@@ -49,19 +49,22 @@ module Lexical where
                     posTokenList pos (t:ts) = (pos, t) : posTokenList (calculateOffset pos t) ts
     
     updateKeywordInToken :: (Position, Token) -> (Position, Token)
-    updateKeywordInToken (pos, (lex, (cla, typ))) 
-        | lex == "inicio"       = (pos, (lex, (Inicio, Null)))
-        | lex == "varinicio"    = (pos, (lex, (VarInicio, Null)))
-        | lex == "varfim"       = (pos, (lex, (VarFim, Null)))
-        | lex == "escreva"      = (pos, (lex, (Escreva, Null)))
-        | lex == "leia"         = (pos, (lex, (Leia, Null)))
-        | lex == "se"           = (pos, (lex, (Se, Null)))
-        | lex == "entao"        = (pos, (lex, (Entao, Null)))
-        | lex == "fimse"        = (pos, (lex, (FimSe, Null)))
-        | lex == "repita"       = (pos, (lex, (Repita, Null)))
-        | lex == "fimRepita"    = (pos, (lex, (FimRepita, Null)))
-        | lex == "fim"          = (pos, (lex, (Fim, Null)))
-        | otherwise             = (pos, (lex, (cla, typ))) 
+    updateKeywordInToken (pos, (lex, cla)) 
+        | lex == "inicio"       = (pos, (lex, Inicio))
+        | lex == "varinicio"    = (pos, (lex, VarInicio))
+        | lex == "varfim"       = (pos, (lex, VarFim))
+        | lex == "escreva"      = (pos, (lex, Escreva))
+        | lex == "leia"         = (pos, (lex, Leia))
+        | lex == "se"           = (pos, (lex, Se))
+        | lex == "entao"        = (pos, (lex, Entao))
+        | lex == "fimse"        = (pos, (lex, FimSe))
+        | lex == "repita"       = (pos, (lex, Repita))
+        | lex == "fimrepita"    = (pos, (lex, FimRepita))
+        | lex == "fim"          = (pos, (lex, Fim))
+        | lex == "inteiro"      = (pos, (lex, Inteiro))
+        | lex == "real"         = (pos, (lex, Real))
+        | lex == "literal"      = (pos, (lex, Literal))
+        | otherwise             = (pos, (lex, cla)) 
 
     updateKeywords :: [(Position, Token)] -> [(Position, Token)]
     updateKeywords = Prelude.map updateKeywordInToken

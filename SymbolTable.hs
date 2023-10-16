@@ -4,7 +4,7 @@ module SymbolTable where
     import Token
 
     type Key = Lexeme
-    type Value = (Class, Type)
+    type Value = Class
 
     type SymbolTable = Map Key Value
 
